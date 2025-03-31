@@ -58,12 +58,32 @@ class DoctorDeviceResource extends Resource
                 TextColumn::make('device.name')
                     ->searchable()
                     ->label('Device'),
+                TextColumn::make('device.manufacturer.name')
+                    ->searchable()
+                    ->label('Manufacturer'),
+                TextColumn::make('device.deviceType.name')
+                    ->searchable()
+                    ->label('Device Type'),
                 TextColumn::make('room.name')
                     ->searchable()
                     ->label('Room'),
                 TextColumn::make('last_certification_date')
                     ->searchable()
                     ->label('Last Certification Date'),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('device_id')
+                    ->relationship('device', 'name')
+                    ->label('Device'),
+                Tables\Filters\SelectFilter::make('room_id')
+                    ->relationship('room', 'name')
+                    ->label('Room'),
+                Tables\Filters\SelectFilter::make('device.deviceType_id')
+                    ->relationship('device.deviceType', 'name')
+                    ->label('Device Type'),
+                Tables\Filters\SelectFilter::make('device.manufacturer_id')
+                    ->relationship('device.manufacturer', 'name')
+                    ->label('Manufacturer'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -20,7 +20,7 @@ class DeviceTypeResource extends Resource
 {
     protected static ?string $model = DeviceType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-device-tablet';
+    protected static ?string $navigationIcon = 'heroicon-m-bars-3-bottom-left';
 
     public static function form(Form $form): Form
     {

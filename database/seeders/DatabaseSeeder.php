@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
            UserSeeder::class,
            DeviceTypeSeeder::class,
            DeviceSeeder::class,
+           ServiceSeeder::class,
        ]);
     }
 }

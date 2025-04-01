@@ -52,6 +52,12 @@ class RoomResource extends Resource
                     ->sortable(),
             ])
             ->actions([
+                Tables\Actions\Action::make('locations')
+                    ->color('warning')
+                    ->label('Devices')
+                    ->icon('heroicon-o-rectangle-stack')
+                    ->url(fn($record) => DoctorDeviceResource::getUrl('index', ['tableFilters[room_id][value]' => $record->id]))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);

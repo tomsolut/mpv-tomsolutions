@@ -22,6 +22,9 @@ class DeviceTypeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-bars-3-bottom-left';
 
+    protected static ?string $navigationGroup = 'Devices';
+
+
     public static function form(Form $form): Form
     {
         return $form

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RolesEnum;
 use App\Filament\Resources\LocationResource\Pages;
 use App\Filament\Resources\LocationResource\RelationManagers;
 use App\Models\Location;
@@ -47,7 +48,22 @@ class LocationResource extends Resource
 
     public static function table(Table $table): Table
     {
+        if (auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+            $filters = [
+                Tables\Filters\SelectFilter::make('user_id')
+                    ->relationship('doctor', 'name')
+                    ->label('Doctor'),
+            ];
+        } else {
+            $filters = [];
+        }
+
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+                    $query->where('user_id', auth()->id());
+                }
+            })
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -69,7 +85,14 @@ class LocationResource extends Resource
                     ->searchable()
                     ->label('Doctor'),
             ])
+            ->filters($filters)
             ->actions([
+                Tables\Actions\Action::make('locations')
+                    ->color('warning')
+                    ->label('Devices')
+                    ->icon('heroicon-o-rectangle-stack')
+                    ->url(fn($record) => DoctorDeviceResource::getUrl('index', ['tableFilters[room][location_id][value]' => $record->id]))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RolesEnum;
 use App\Filament\Resources\DoctorDeviceResource\Pages;
 use App\Filament\Resources\DoctorDeviceResource\RelationManagers;
 use App\Models\DoctorDevice;
@@ -26,6 +27,13 @@ class DoctorDeviceResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->modifyQueryUsing(function (Builder $query) {
+                if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+                    $query->whereHas('room.location', function (Builder $query) {
+                        $query->where('user_id', auth()->id());
+                    });
+                }
+            })
             ->schema([
                 TextInput::make('name')
                     ->label('Name')
@@ -47,6 +55,30 @@ class DoctorDeviceResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $filters = [
+            Tables\Filters\SelectFilter::make('room.location_id')
+                ->relationship('room.location', 'name')
+                ->label('Location'),
+            Tables\Filters\SelectFilter::make('room_id')
+                ->relationship('room', 'name')
+                ->label('Room'),
+            Tables\Filters\SelectFilter::make('device_id')
+                ->relationship('device', 'name')
+                ->label('Device'),
+            Tables\Filters\SelectFilter::make('device.deviceType_id')
+                ->relationship('device.deviceType', 'name')
+                ->label('Device Type'),
+            Tables\Filters\SelectFilter::make('device.manufacturer_id')
+                ->relationship('device.manufacturer', 'name')
+                ->label('Manufacturer'),
+        ];
+
+        if (auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+            Tables\Filters\SelectFilter::make('room.location.user_id')
+                ->relationship('room.location.doctor', 'name')
+                ->label('Doctor');
+        }
+
         return $table
             ->columns([
                 TextColumn::make('name')
@@ -58,6 +90,9 @@ class DoctorDeviceResource extends Resource
                 TextColumn::make('device.name')
                     ->searchable()
                     ->label('Device'),
+                TextColumn::make('room.location.doctor.name')
+                    ->searchable()
+                    ->label('Doctor'),
                 TextColumn::make('device.manufacturer.name')
                     ->searchable()
                     ->label('Manufacturer'),
@@ -71,20 +106,7 @@ class DoctorDeviceResource extends Resource
                     ->searchable()
                     ->label('Last Certification Date'),
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('device_id')
-                    ->relationship('device', 'name')
-                    ->label('Device'),
-                Tables\Filters\SelectFilter::make('room_id')
-                    ->relationship('room', 'name')
-                    ->label('Room'),
-                Tables\Filters\SelectFilter::make('device.deviceType_id')
-                    ->relationship('device.deviceType', 'name')
-                    ->label('Device Type'),
-                Tables\Filters\SelectFilter::make('device.manufacturer_id')
-                    ->relationship('device.manufacturer', 'name')
-                    ->label('Manufacturer'),
-            ])
+            ->filters($filters)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

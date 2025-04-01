@@ -27,13 +27,6 @@ class DoctorDeviceResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->modifyQueryUsing(function (Builder $query) {
-                if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
-                    $query->whereHas('room.location', function (Builder $query) {
-                        $query->where('user_id', auth()->id());
-                    });
-                }
-            })
             ->schema([
                 TextInput::make('name')
                     ->label('Name')
@@ -80,6 +73,13 @@ class DoctorDeviceResource extends Resource
         }
 
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+                    $query->whereHas('room.location', function (Builder $query) {
+                        $query->where('user_id', auth()->id());
+                    });
+                }
+            })
             ->columns([
                 TextColumn::make('name')
                     ->searchable()

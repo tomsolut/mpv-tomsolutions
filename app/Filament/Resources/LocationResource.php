@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Select;
 
 class LocationResource extends Resource
 {
@@ -30,11 +31,14 @@ class LocationResource extends Resource
                 TextInput::make('name')
                     ->label('Name')
                     ->required(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('doctor', 'name')
+                Select::make('user_id')
+                    ->relationship('doctor', 'name', function ($query) {
+                        $query->whereHas('roles', function ($q) {
+                            $q->where('name', 'Doctor');
+                        });
+                    })
                     ->label('Doctor')
                     ->required(),
-
                 TextInput::make('city')
                     ->label('City'),
                 TextInput::make('postal_code')

@@ -73,6 +73,18 @@ class DoctorDeviceResource extends Resource
         }
 
         return $table
+            ->recordClasses(function (DoctorDevice $doctorDevice) {
+                $recallDate = $doctorDevice->last_certification_date->addDays($doctorDevice->device->recall_period);
+                $monthsDiff = now()->diffInMonths($recallDate);
+
+                if ($monthsDiff < 1) {
+                    return 'certification-danger';
+                } elseif ($monthsDiff < 2) {
+                    return 'certification-warning';
+                } else {
+                    return 'certification-success';
+                }
+            })
             ->modifyQueryUsing(function (Builder $query) {
                 if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
                     $query->whereHas('room.location', function (Builder $query) {
@@ -103,6 +115,7 @@ class DoctorDeviceResource extends Resource
                     ->searchable()
                     ->label('Room'),
                 TextColumn::make('last_certification_date')
+                    ->date()
                     ->searchable()
                     ->label('Last Certification Date'),
             ])

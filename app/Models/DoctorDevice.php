@@ -14,6 +14,10 @@ class DoctorDevice extends Model
         'last_certification_date',
     ];
 
+    protected $casts = [
+        'last_certification_date' => 'date',
+    ];
+
     public function device()
     {
         return $this->belongsTo(Device::class);

@@ -85,12 +85,12 @@ class DoctorDeviceResource extends Resource
                     return 'certification-success';
                 }
             })
-            ->modifyQueryUsing(function (Builder $query) {
-                if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
-                    $query->whereHas('room.location', function (Builder $query) {
-                        $query->where('user_id', auth()->id());
-                    });
-                }
+            ->modifyQueryUsing(function (Builder $query) { if (!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN])) {
+                $query->whereHas('room.location', function (Builder $query) {
+                    $query->where('user_id', auth()->id());
+                });
+            }
+
             })
             ->columns([
                 TextColumn::make('name')
@@ -121,6 +121,12 @@ class DoctorDeviceResource extends Resource
             ])
             ->filters($filters)
             ->actions([
+                Tables\Actions\Action::make('attachments')
+                    ->color('warning')
+                    ->label('Attachments')
+                    ->icon('heroicon-o-paper-clip')
+                    ->url(fn($record) => AttachmentResource::getUrl('index', ['doctorDevice' => $record->id]))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);

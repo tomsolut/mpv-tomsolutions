@@ -20,7 +20,7 @@ class Devices extends BaseWidget
                 \App\Models\DoctorDevice::query()
                     ->with(['device', 'room.location.doctor', 'device.manufacturer', 'device.deviceType'])
                     ->when(!auth()->user()->hasRole([RolesEnum::SUPER_ADMIN, RolesEnum::ADMIN]), function ($query) {
-                        $query->whereHas('room.location', function (Builder $query) {
+                        $query->whereHas('room.location', function ($query) {
                             $query->where('user_id', auth()->id());
                         });
                     }))

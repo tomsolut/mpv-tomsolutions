@@ -93,7 +93,6 @@ class AttachmentResource extends Resource
                     ->action(function (Attachment $record) {
                         return response()->download(
                             storage_path('app/private/' . $record->file),
-                            $record->name
                         );
                     }),
                 Tables\Actions\EditAction::make(),

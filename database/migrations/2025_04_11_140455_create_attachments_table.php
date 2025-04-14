@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\DeviceType;
+use App\Models\DoctorDevice;
 
 return new class extends Migration {
     /**
@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(DeviceType::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(DoctorDevice::class)->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->string('file');
             $table->timestamps();

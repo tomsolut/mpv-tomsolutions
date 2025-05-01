@@ -12,6 +12,7 @@ class DoctorDevice extends Model
         'name',
         'serial_number',
         'last_certification_date',
+        'notes',
     ];
 
     protected $casts = [

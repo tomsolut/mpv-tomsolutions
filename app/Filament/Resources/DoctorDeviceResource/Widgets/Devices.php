@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\DoctorDeviceResource\Widgets;
 
 use App\Enums\RolesEnum;
+use App\Filament\Resources\DoctorDeviceResource;
 use App\Models\DoctorDevice;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -64,8 +65,10 @@ class Devices extends BaseWidget
                             ->label('Last Certification Date'),
                     ])
                     ->actions([
-                        Tables\Actions\EditAction::make(),
-                        Tables\Actions\DeleteAction::make(),
+                        Tables\Actions\EditAction::make()
+                            ->label('Edit')
+                            ->url(fn($record) => DoctorDeviceResource::getUrl('edit', ['record' => $record])),
+                        Tables\Actions\DeleteAction::make()
                     ]);
     }
 }

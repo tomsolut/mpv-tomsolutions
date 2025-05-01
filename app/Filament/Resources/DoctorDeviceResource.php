@@ -17,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Textarea;
 
 class DoctorDeviceResource extends Resource
 {
@@ -43,6 +44,9 @@ class DoctorDeviceResource extends Resource
                     ->required(),
                 DatePicker::make('last_certification_date')
                     ->label('Last Certification Date'),
+                Textarea::make('notes')
+                    ->label('Notes')
+                    ->rows(3),
             ]);
     }
 
@@ -75,11 +79,11 @@ class DoctorDeviceResource extends Resource
         return $table
             ->recordClasses(function (DoctorDevice $doctorDevice) {
                 $recallDate = $doctorDevice->last_certification_date->addDays($doctorDevice->device->recall_period);
-                $monthsDiff = now()->diffInMonths($recallDate);
+                $monthsDiff = now()->diffInWeeks($recallDate);
 
-                if ($monthsDiff < 1) {
+                if ($monthsDiff < 6) {
                     return 'certification-danger';
-                } elseif ($monthsDiff < 2) {
+                } elseif ($monthsDiff < 12) {
                     return 'certification-warning';
                 } else {
                     return 'certification-success';
@@ -118,6 +122,11 @@ class DoctorDeviceResource extends Resource
                     ->date()
                     ->searchable()
                     ->label('Last Certification Date'),
+                TextColumn::make('notes')
+                    ->label('Notes')
+                    ->searchable()
+                    ->extraAttributes(['style' => 'width: 400px'])
+                    ->wrap()
             ])
             ->filters($filters)
             ->actions([

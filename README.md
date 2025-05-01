@@ -4,7 +4,7 @@
 OMR is a Laravel 12-based application with FILAMENT 3 . This document provides installation and setup instructions.
 
 ## Requirements
-- PHP 8.2+
+- PHP 8.3+
 - Composer
 - MySQL / PostgreSQL / SQLite
 

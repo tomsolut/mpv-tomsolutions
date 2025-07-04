@@ -22,20 +22,4 @@ class Device extends Model
     {
         return $this->belongsTo(DeviceType::class);
     }
-
-    /**
-     * Get all doctor devices for this device.
-     */
-    public function doctorDevices()
-    {
-        return $this->hasMany(DoctorDevice::class);
-    }
-
-    /**
-     * Get the next recall date based on recall period.
-     */
-    public function getNextRecallDateAttribute()
-    {
-        return now()->addDays($this->recall_period);
-    }
 }

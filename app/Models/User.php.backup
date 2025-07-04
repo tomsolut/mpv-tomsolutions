@@ -60,54 +60,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get all locations owned by this user.
-     */
-    public function locations()
-    {
-        return $this->hasMany(Location::class);
-    }
-
-    /**
-     * Get total count of devices across all locations.
-     */
-    public function getTotalDevicesCountAttribute()
-    {
-        $totalDevices = 0;
-        foreach ($this->locations as $location) {
-            $totalDevices += $location->getTotalDevicesCountAttribute();
-        }
-        return $totalDevices;
-    }
-
-    /**
-     * Get all overdue devices across all locations.
-     */
-    public function getOverdueDevicesAttribute()
-    {
-        $overdueDevices = collect();
-        foreach ($this->locations as $location) {
-            $overdueDevices = $overdueDevices->merge($location->getOverdueDevicesAttribute());
-        }
-        return $overdueDevices;
-    }
-
-    /**
-     * Check if user is a doctor.
-     */
-    public function getIsDoctorAttribute()
-    {
-        return $this->hasRole('Doctor');
-    }
-
-    /**
-     * Check if user is an admin.
-     */
-    public function getIsAdminAttribute()
-    {
-        return $this->hasRole(['Admin', 'Super Admin']);
-    }
-
     public function canAccessPanel(Panel $panel): bool
     {
         return true;

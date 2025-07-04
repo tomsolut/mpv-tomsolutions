@@ -16,3 +16,64 @@
     border-color: #c3e6cb;
     color: #155724;
 }
+
+
+
+/* Custom Header Styling */
+.custom-top-header {
+    background-color: #0d77bc; /* Matches the blue you showed */
+    color: #ffffff;
+    font-size: 0.875rem; /* text-sm */
+    padding-top: 0.375rem; /* py-1.5 */
+    padding-bottom: 0.375rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 10px solid #3999d8;
+}
+
+.custom-top-header .content {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 10px 0;
+}
+
+.custom-top-header .item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-top-header .divider {
+    height: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.fi-topbar {
+    background: #fff !important;
+}
+.fi-topbar nav{
+    background-image:none !important;
+}
+
+.fi-topbar-item-active a, .fi-topbar-item-active button {
+    background-color: #0283c6 !important;
+}
+
+.fi-topbar-item-active a .fi-topbar-item-label,.fi-topbar-item-active a .fi-topbar-item-icon {
+    color: #fff !important;
+}
+.fi-topbar-item-active button .fi-topbar-item-label,.fi-topbar-item-active button .fi-topbar-group-toggle-icon {
+    color: #fff !important;
+}
+
+/* mobile css*/
+@media (max-width: 768px) {
+    .custom-top-header svg {
+        display: none;
+    }
+}

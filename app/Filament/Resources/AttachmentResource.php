@@ -84,6 +84,11 @@ class AttachmentResource extends Resource
                     ->label('Attachment Name')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->date()
+                    ->sortable()
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\Action::make('download')

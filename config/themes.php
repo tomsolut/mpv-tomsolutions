@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'mode' => 'user',
+    'mode' => 'global',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return [
     */
 
     'default' => [
-        'theme' => 'default',
+        'theme' => 'nord',
         'theme_color' => 'blue',
     ],
 ];

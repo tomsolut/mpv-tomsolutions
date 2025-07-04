@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\DoctorDeviceResource\Widgets\Devices;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -25,18 +26,32 @@ use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->booted(function () {
+            \Filament\Facades\Filament::registerRenderHook(
+                'panels::body.start',
+                fn() => view('filament.custom-header')
+            );
+        });
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
             ->sidebarCollapsibleOnDesktop()
             ->id('admin')
+            ->favicon(asset('assets/img/favicon.png'))
             ->path('/')
             ->login()
             ->brandLogo(asset('assets/img/logo.png'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Sky,
             ])
+            ->topNavigation()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -49,9 +64,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(
-                        userMenuLabel: 'My Profile', // Customizes the 'account' link label in the panel User Menu (default = null)
+                        userMenuLabel: 'My Profile'
                     ),
-                \Hasnayeen\Themes\ThemesPlugin::make(),
+//                \Hasnayeen\Themes\ThemesPlugin::make()
+//                    ->canViewThemesPage(fn() => false)
             ])
             ->middleware([
                 EncryptCookies::class,
